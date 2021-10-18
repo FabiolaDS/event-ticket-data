@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class EventController
-{
-  private EventRepository eventRepository;
-  public EventController(EventRepository eventRepository) {
-    this.eventRepository = eventRepository;
-  }
-@GetMapping("/events")
- public List<Event> getAllEvents() {
+public class EventController {
+    private EventRepository eventRepository;
 
-    return  eventRepository.getAllEvents();
-  }
+    public EventController(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
+    @GetMapping("/events")
+    public List<Event> getAllEvents() {
+
+        return eventRepository.getAllEvents();
+    }
 }
