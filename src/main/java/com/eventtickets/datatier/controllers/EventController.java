@@ -3,6 +3,7 @@ package com.eventtickets.datatier.controllers;
 import com.eventtickets.datatier.controllers.DTO.CreateEventDTO;
 import com.eventtickets.datatier.model.Event;
 import com.eventtickets.datatier.persistence.EventRepository;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class EventController {
     }
 
     @PostMapping("/events")
-    public Event addEvent(@RequestBody CreateEventDTO eventDTO)
+    public Event addEvent(@Validated @RequestBody CreateEventDTO eventDTO)
     {
         Event event = new Event();
         event.setName(eventDTO.getName());
