@@ -4,14 +4,12 @@ import com.eventtickets.datatier.controllers.DTO.CreateEventDTO;
 import com.eventtickets.datatier.model.Event;
 import com.eventtickets.datatier.persistence.EventRepository;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/events")
 public class EventController {
     private EventRepository eventRepository;
 
@@ -19,13 +17,13 @@ public class EventController {
         this.eventRepository = eventRepository;
     }
 
-    @GetMapping("/events")
+    @GetMapping
     public List<Event> getAllEvents() {
 
         return eventRepository.findAll();
     }
 
-    @PostMapping("/events")
+    @PostMapping
     public Event addEvent(@Validated @RequestBody CreateEventDTO eventDTO)
     {
         Event event = new Event();
