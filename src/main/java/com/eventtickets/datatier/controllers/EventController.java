@@ -24,7 +24,7 @@ public class EventController {
     }
 
     @PostMapping
-    public Event addEvent(@Validated @RequestBody CreateEventDTO eventDTO)
+    public Event addEvent(@RequestBody CreateEventDTO eventDTO)
     {
         Event event = new Event();
         event.setName(eventDTO.getName());

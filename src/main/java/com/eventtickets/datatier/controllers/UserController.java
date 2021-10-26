@@ -23,6 +23,4 @@ public class UserController {
     public User findUserByEmail(@RequestParam String email) {
         return userRepository.findByEmail(email);
     }
-
-
 }
