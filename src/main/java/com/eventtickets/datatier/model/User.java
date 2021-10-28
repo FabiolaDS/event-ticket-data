@@ -1,5 +1,6 @@
 package com.eventtickets.datatier.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,5 +20,6 @@ public class User {
     private String email;
     private String fullName;
     private String password;
-    private Boolean isAdmin;
+    @JsonProperty("admin")
+    private Boolean isAdmin = false;
 }
