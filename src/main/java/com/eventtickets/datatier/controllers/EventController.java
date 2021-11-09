@@ -40,6 +40,6 @@ public class EventController {
     @GetMapping ("/{id}")
     public Event getEventById(@PathVariable Long id)
     {
-     return   eventRepository.findEventById(id);
+     return   eventRepository.findById(id).orElseThrow();
     }
 }
