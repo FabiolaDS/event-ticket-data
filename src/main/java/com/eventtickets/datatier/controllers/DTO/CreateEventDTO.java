@@ -18,4 +18,5 @@ public class CreateEventDTO
   private int nrOfTickets;
   @JsonFormat(pattern = "yyyy-MM-dd_HH:mm")
   private LocalDateTime dateTime;
+  private double price;
 }

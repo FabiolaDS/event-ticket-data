@@ -27,4 +27,5 @@ public class Event
   private boolean isCancelled;
   private LocalDateTime dateTime;
   private int bookedTickets;
+  private double price;
 }

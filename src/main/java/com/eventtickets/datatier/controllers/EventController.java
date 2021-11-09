@@ -33,7 +33,13 @@ public class EventController {
         event.setThumbnail(eventDTO.getThumbnail());
         event.setNrOfTickets(eventDTO.getNrOfTickets());
         event.setDateTime(eventDTO.getDateTime());
+        event.setPrice(eventDTO.getPrice());
 
         return eventRepository.save(event);
+    }
+    @GetMapping ("/{id}")
+    public Event getEventById(@PathVariable Long id)
+    {
+     return   eventRepository.findEventById(id);
     }
 }

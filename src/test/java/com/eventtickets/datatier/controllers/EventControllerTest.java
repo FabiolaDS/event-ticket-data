@@ -33,7 +33,7 @@ class EventControllerTest
   {
     // Create new Event
     CreateEventDTO dto = new CreateEventDTO("random name", "description",
-        "location", "thumbnail", 10, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        "location", "thumbnail", 10, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),400);
 
     Event created = mapper.readValue(mvc.perform(
         post("/events")
@@ -56,7 +56,7 @@ class EventControllerTest
   @Test void testAddEvent() throws Exception
   {
     CreateEventDTO dto = new CreateEventDTO("random name", "description",
-        "location", "thumbnail", 10, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        "location", "thumbnail", 10, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),460);
 
     MvcResult response = mvc.perform(
         post("/events")
