@@ -9,10 +9,7 @@ import com.eventtickets.datatier.persistence.PaymentRepository;
 import com.eventtickets.datatier.persistence.TicketRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +28,13 @@ public class PaymentController
   {
     Payment payment = paymentRepository.save(toEntity(paymentDTO));
     return toDTO(payment);
+  }
+
+  @GetMapping("/byUser/{buyerId}/{eventId}")
+  public PaymentDTO getById(long buyerId, long eventId)
+  {
+    return toDTO(
+        paymentRepository.getById(new Ticket.TicketId(buyerId, eventId)));
   }
 
   private PaymentDTO toDTO(Payment payment)

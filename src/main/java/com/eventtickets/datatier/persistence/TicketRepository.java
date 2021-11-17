@@ -9,4 +9,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Ticket.TicketId>
 {
   List<Ticket> findByBuyerId(Long userId);
 
+
 }

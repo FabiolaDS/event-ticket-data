@@ -43,6 +43,13 @@ public class TicketController
         .collect(Collectors.toList());
   }
 
+  @GetMapping("/byUser/{buyerId}/{eventId}")
+  public TicketDTO getById(long buyerId, long eventId)
+  {
+    return toDTO(
+        ticketRepository.getById(new Ticket.TicketId(buyerId, eventId)));
+  }
+
   private TicketDTO toDTO(Ticket ticket)
   {
     return new TicketDTO(ticket.getBuyer().getId(), ticket.getEvent().getId(),
