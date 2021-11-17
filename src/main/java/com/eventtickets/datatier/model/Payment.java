@@ -1,6 +1,5 @@
 package com.eventtickets.datatier.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+
 public class Payment
 {
   @ManyToOne
@@ -23,5 +22,13 @@ public class Payment
   @Id
   private Ticket.TicketId ticketId;
 
+  public Payment(CreditCard creditCard, LocalDateTime localDateTime,
+      double amount, Ticket ticket)
+  {
+    this.creditCard = creditCard;
+    this.dateTime = localDateTime;
+    this.amount = amount;
+    this.ticket = ticket;
+  }
 
 }

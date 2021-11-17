@@ -3,7 +3,6 @@ package com.eventtickets.datatier.controllers;
 import com.eventtickets.datatier.controllers.DTO.CreateEventDTO;
 import com.eventtickets.datatier.model.Event;
 import com.eventtickets.datatier.persistence.EventRepository;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

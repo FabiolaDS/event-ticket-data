@@ -13,14 +13,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping ("/tickets")
+@RequestMapping("/tickets")
 public class TicketController
 {
   private TicketRepository ticketRepository;
   private UserRepository userRepository;
   private EventRepository eventRepository;
 
-  public TicketController(TicketRepository ticketRepository,UserRepository userRepository, EventRepository eventRepository)
+  public TicketController(TicketRepository ticketRepository,
+      UserRepository userRepository, EventRepository eventRepository)
   {
     this.ticketRepository = ticketRepository;
     this.userRepository = userRepository;
@@ -32,33 +33,30 @@ public class TicketController
   {
     Ticket ticket = ticketRepository.save(toEntity(ticketDTO));
 
-   return toDTO(ticket);
+    return toDTO(ticket);
   }
-@GetMapping ("/byUser/{userId}")
+
+  @GetMapping("/byUser/{userId}")
   public List<TicketDTO> getTicketsByUser(@PathVariable Long userId)
   {
-    return ticketRepository.findByBuyerId(userId)
-        .stream().map(this::toDTO)
+    return ticketRepository.findByBuyerId(userId).stream().map(this::toDTO)
         .collect(Collectors.toList());
   }
 
   private TicketDTO toDTO(Ticket ticket)
   {
-    return new TicketDTO(ticket.getBuyer().getId(),
-        ticket.getEvent().getId(),
-        ticket.getTicketNr(),
-        ticket.getPrice(),
-        ticket.getNrOfTickets());
+    return new TicketDTO(ticket.getBuyer().getId(), ticket.getEvent().getId(),
+        ticket.getTicketNr(), ticket.getPrice(), ticket.getNrOfTickets());
 
   }
-  private Ticket toEntity (TicketDTO ticketDTO)
+
+  private Ticket toEntity(TicketDTO ticketDTO)
   {
     User user = userRepository.findById(ticketDTO.getBuyerId()).orElseThrow();
-    Event event = eventRepository.findById(ticketDTO.getEventId()).orElseThrow();
-    return new Ticket(user,event,
-        ticketDTO.getTicketNr(),
-        ticketDTO.getPrice(),
-        ticketDTO.getNrOfTickets());
+    Event event = eventRepository.findById(ticketDTO.getEventId())
+        .orElseThrow();
+    return new Ticket(user, event, ticketDTO.getTicketNr(),
+        ticketDTO.getPrice(), ticketDTO.getNrOfTickets());
   }
 
 }
