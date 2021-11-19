@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TicketDTO
 {
-  private long buyerId;
   private long eventId;
   private String ticketNr;
-  private double price;
-  private int nrOfTickets;
+  private String cardNumber;
 }

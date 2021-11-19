@@ -1,44 +1,71 @@
 package com.eventtickets.datatier.controllers;
 
 import com.eventtickets.datatier.controllers.DTO.CreateEventDTO;
+import com.eventtickets.datatier.controllers.DTO.EventDTO;
 import com.eventtickets.datatier.model.Event;
+import com.eventtickets.datatier.model.User;
 import com.eventtickets.datatier.persistence.EventRepository;
+import com.eventtickets.datatier.persistence.UserRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/events")
-public class EventController {
-    private EventRepository eventRepository;
+@RequiredArgsConstructor
+public class EventController
+{
+  @NonNull private EventRepository eventRepository;
+  @NonNull private UserRepository userRepository;
 
-    public EventController(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
+ @GetMapping
+  public List<EventDTO> getAllEventsAfter(@RequestParam LocalDateTime localDateTime)
+ {
+   return eventRepository.findByTimeOfTheEventAfter(localDateTime).stream().map(this::toDTO).collect(
+       Collectors.toList());
+ }
 
-    @GetMapping
-    public List<Event> getAllEvents() {
+  @PostMapping public EventDTO addEvent(@RequestBody CreateEventDTO eventDTO)
+  {
+    Event event = new Event();
+    event.setName(eventDTO.getName());
+    event.setDescription(eventDTO.getDescription());
+    event.setLocation(eventDTO.getLocation());
+    event.setThumbnail(eventDTO.getThumbnail());
+    event.setTimeOfTheEvent(eventDTO.getTimeOfTheEvent());
+    event.setAvailableTickets(eventDTO.getAvailableTickets());
+    event.setTicketPrice(eventDTO.getTicketPrice());
 
-        return eventRepository.findAll();
-    }
+    User organizer = userRepository.findById(eventDTO.getOrganizerId())
+        .orElseThrow();
+    event.setOrganizer(organizer);
 
-    @PostMapping
-    public Event addEvent(@RequestBody CreateEventDTO eventDTO)
-    {
-        Event event = new Event();
-        event.setName(eventDTO.getName());
-        event.setDescription(eventDTO.getDescription());
-        event.setLocation(eventDTO.getLocation());
-        event.setThumbnail(eventDTO.getThumbnail());
-        event.setNrOfTickets(eventDTO.getNrOfTickets());
-        event.setDateTime(eventDTO.getDateTime());
-        event.setPrice(eventDTO.getPrice());
+    return toDTO(eventRepository.save(event));
+  }
 
-        return eventRepository.save(event);
-    }
-    @GetMapping ("/{id}")
-    public Event getEventById(@PathVariable Long id)
-    {
-     return   eventRepository.findById(id).orElseThrow();
-    }
+  @GetMapping("/{id}") public EventDTO getEventById(@PathVariable Long id)
+  {
+    Event event = eventRepository.findById(id).orElseThrow();
+    return toDTO(event);
+
+  }
+
+  private EventDTO toDTO(Event event)
+  {
+    return new EventDTO(event.getId(),
+        event.getName(),
+        event.getDescription(),
+        event.getLocation(),
+        event.getThumbnail(),
+        event.getAvailableTickets(),
+        event.isCancelled(),
+        event.getTimeOfTheEvent(),
+        event.getTicketPrice(),
+        event.getOrganizer().getId(),
+        event.getBookedTickets().size());
+  }
 }

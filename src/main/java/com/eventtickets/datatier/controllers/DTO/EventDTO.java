@@ -1,21 +1,15 @@
-package com.eventtickets.datatier.model;
+package com.eventtickets.datatier.controllers.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Event
+public class EventDTO
 {
-  @Id
-  @GeneratedValue
   private Long id;
 
   private String name;
@@ -26,8 +20,6 @@ public class Event
   private boolean isCancelled;
   private LocalDateTime timeOfTheEvent;
   private double ticketPrice;
-  @ManyToOne
-  private User organizer;
-  @OneToMany(mappedBy = "event")
-  private List<Ticket> bookedTickets;
+  private long organizerId;
+  private long bookedTickets;
 }

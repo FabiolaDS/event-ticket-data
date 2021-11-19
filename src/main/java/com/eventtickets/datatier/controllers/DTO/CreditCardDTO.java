@@ -13,5 +13,4 @@ public class CreditCardDTO
   private int expiryYear;
   private int cvv;
   private String cardOwnerName;
-  private long ownerId;
 }

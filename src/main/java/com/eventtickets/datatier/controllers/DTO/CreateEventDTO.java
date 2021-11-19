@@ -15,8 +15,9 @@ public class CreateEventDTO
   private String description;
   private String location;
   private String thumbnail;
-  private int nrOfTickets;
+  private int availableTickets;
   @JsonFormat(pattern = "yyyy-MM-dd_HH:mm")
-  private LocalDateTime dateTime;
-  private double price;
+  private LocalDateTime timeOfTheEvent;
+  private double ticketPrice;
+  private long organizerId;
 }

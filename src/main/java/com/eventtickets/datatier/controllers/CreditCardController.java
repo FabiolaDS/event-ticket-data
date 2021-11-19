@@ -29,7 +29,7 @@ public class CreditCardController
   @GetMapping("/user/{userId}")
   public List<CreditCardDTO> getAllCreditCardsForUser(@PathVariable long userId)
   {
-    return creditCardRepository.findByOwnerId(userId).stream().map(this::toDTO)
+    return userRepository.findById(userId).orElseThrow().getCreditCards().stream().map(this::toDTO)
         .collect(Collectors.toList());
 
   }
@@ -37,8 +37,7 @@ public class CreditCardController
   private CreditCardDTO toDTO(CreditCard entity)
   {
     return new CreditCardDTO(entity.getCardNumber(), entity.getExpiryMonth(),
-        entity.getExpiryYear(), entity.getCvv(), entity.getCardOwnerName(),
-        entity.getOwner().getId());
+        entity.getExpiryYear(), entity.getCvv(), entity.getCardOwnerName());
 
   }
 
@@ -51,9 +50,6 @@ public class CreditCardController
     creditCard.setExpiryMonth(dto.getExpiryMonth());
     creditCard.setExpiryYear(dto.getExpiryYear());
 
-    User userOwner = userRepository.findById(dto.getOwnerId()).orElseThrow();
-
-    creditCard.setOwner(userOwner);
     return creditCard;
   }
 

@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
-@Table(name = "account")
+@Table(name = "account",
+    uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Entity
 @Data
 @NoArgsConstructor
@@ -22,4 +21,8 @@ public class User {
     private String password;
     @JsonProperty("admin")
     private Boolean isAdmin = false;
+    @ManyToMany
+    private List<CreditCard> creditCards;
+    @OneToMany
+    private List<Ticket> tickets;
 }

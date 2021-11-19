@@ -1,6 +1,5 @@
 package com.eventtickets.datatier.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import javax.persistence.ManyToOne;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class CreditCard
 {
   @Id
@@ -20,7 +18,15 @@ public class CreditCard
   private int expiryYear;
   private int cvv;
   private String cardOwnerName;
-  @ManyToOne
-  private User owner;
+
+  public CreditCard(String cardNumber, int expiryMonth, int expiryYear, int cvv,
+      String cardOwnerName)
+  {
+    this.cardNumber = cardNumber;
+    this.expiryMonth = expiryMonth;
+    this.expiryYear = expiryYear;
+    this.cvv = cvv;
+    this.cardOwnerName = cardOwnerName;
+  }
 
 }
