@@ -36,7 +36,7 @@ public class CreditCardController
 
   private CreditCardDTO toDTO(CreditCard entity)
   {
-    return new CreditCardDTO(entity.getCardNumber(), entity.getExpiryMonth(),
+    return new CreditCardDTO(entity.getId(),entity.getCardNumber(), entity.getExpiryMonth(),
         entity.getExpiryYear(), entity.getCvv(), entity.getCardOwnerName());
 
   }
@@ -44,6 +44,7 @@ public class CreditCardController
   private CreditCard toEntity(CreditCardDTO dto)
   {
     CreditCard creditCard = new CreditCard();
+    creditCard.setId(dto.getId());
     creditCard.setCardNumber(dto.getCardNumber());
     creditCard.setCardOwnerName(dto.getCardOwnerName());
     creditCard.setCvv(dto.getCvv());

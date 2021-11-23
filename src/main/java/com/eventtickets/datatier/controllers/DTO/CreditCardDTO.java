@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreditCardDTO
 {
+  private Long id;
   private String cardNumber;
   private int expiryMonth;
   private int expiryYear;
