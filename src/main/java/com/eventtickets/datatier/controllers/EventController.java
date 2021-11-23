@@ -23,9 +23,9 @@ public class EventController
   @NonNull private UserRepository userRepository;
 
  @GetMapping
-  public List<EventDTO> getAllEventsAfter(@RequestParam LocalDateTime localDateTime)
+  public List<EventDTO> getAllEventsAfter(@RequestParam LocalDateTime after)
  {
-   return eventRepository.findByTimeOfTheEventAfter(localDateTime).stream().map(this::toDTO).collect(
+   return eventRepository.findByTimeOfTheEventAfter(after).stream().map(this::toDTO).collect(
        Collectors.toList());
  }
 
