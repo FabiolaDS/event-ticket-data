@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,5 +30,7 @@ public class Event
   @ManyToOne
   private User organizer;
   @OneToMany(mappedBy = "event")
-  private List<Ticket> bookedTickets;
+  private List<Ticket>  bookedTickets = new ArrayList<>();
+
+
 }

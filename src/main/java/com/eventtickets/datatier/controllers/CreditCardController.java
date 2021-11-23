@@ -15,43 +15,47 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/creditCards")
-public class CreditCardController
-{
-  @NonNull private CreditCardRepository creditCardRepository;
-  @NonNull private UserRepository userRepository;
+public class CreditCardController {
+	@NonNull private CreditCardRepository creditCardRepository;
+	@NonNull private UserRepository userRepository;
 
-  @PostMapping public CreditCardDTO createCreditCard(
-      @RequestBody CreditCardDTO creditCardDTO)
-  {
-    return toDTO(creditCardRepository.save(toEntity(creditCardDTO)));
-  }
+	@PostMapping("/{userId}")
+	public CreditCardDTO createCreditCard(
+		@RequestBody CreditCardDTO creditCardDTO, @PathVariable long userId) {
+		User user = userRepository.findById(userId).orElseThrow();
 
-  @GetMapping("/user/{userId}")
-  public List<CreditCardDTO> getAllCreditCardsForUser(@PathVariable long userId)
-  {
-    return userRepository.findById(userId).orElseThrow().getCreditCards().stream().map(this::toDTO)
-        .collect(Collectors.toList());
+		CreditCard creditCard = creditCardRepository
+			.save(toEntity(creditCardDTO));
+		user.getCreditCards().add(creditCard);
+		userRepository.save(user);
+		return toDTO(creditCard);
+	}
 
-  }
+	@GetMapping("/user/{userId}")
+	public List<CreditCardDTO> getAllCreditCardsForUser(
+		@PathVariable long userId) {
+		return userRepository.findById(userId).orElseThrow().getCreditCards()
+			.stream().map(this::toDTO).collect(Collectors.toList());
 
-  private CreditCardDTO toDTO(CreditCard entity)
-  {
-    return new CreditCardDTO(entity.getId(),entity.getCardNumber(), entity.getExpiryMonth(),
-        entity.getExpiryYear(), entity.getCvv(), entity.getCardOwnerName());
+	}
 
-  }
+	private CreditCardDTO toDTO(CreditCard entity) {
+		return new CreditCardDTO(entity.getId(), entity.getCardNumber(),
+			entity.getExpiryMonth(), entity.getExpiryYear(), entity.getCvv(),
+			entity.getCardOwnerName());
 
-  private CreditCard toEntity(CreditCardDTO dto)
-  {
-    CreditCard creditCard = new CreditCard();
-    creditCard.setId(dto.getId());
-    creditCard.setCardNumber(dto.getCardNumber());
-    creditCard.setCardOwnerName(dto.getCardOwnerName());
-    creditCard.setCvv(dto.getCvv());
-    creditCard.setExpiryMonth(dto.getExpiryMonth());
-    creditCard.setExpiryYear(dto.getExpiryYear());
+	}
 
-    return creditCard;
-  }
+	private CreditCard toEntity(CreditCardDTO dto) {
+		CreditCard creditCard = new CreditCard();
+		creditCard.setId(dto.getId());
+		creditCard.setCardNumber(dto.getCardNumber());
+		creditCard.setCardOwnerName(dto.getCardOwnerName());
+		creditCard.setCvv(dto.getCvv());
+		creditCard.setExpiryMonth(dto.getExpiryMonth());
+		creditCard.setExpiryYear(dto.getExpiryYear());
+
+		return creditCard;
+	}
 
 }

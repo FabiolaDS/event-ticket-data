@@ -6,18 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEventDTO
-{
-  private String name;
-  private String description;
-  private String location;
-  private String thumbnail;
-  private int availableTickets;
-  @JsonFormat(pattern = "yyyy-MM-dd_HH:mm")
-  private LocalDateTime timeOfTheEvent;
-  private double ticketPrice;
-  private long organizerId;
+public class CreateEventDTO {
+	private String name;
+	private String description;
+	private String location;
+	private String thumbnail;
+	private int availableTickets;
+	@JsonFormat(pattern = "yyyy-MM-dd_HH:mm")
+	private LocalDateTime timeOfTheEvent;
+	private double ticketPrice;
+	private long organizerId;
 }
