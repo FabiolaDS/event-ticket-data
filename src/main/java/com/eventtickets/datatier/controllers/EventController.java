@@ -24,7 +24,7 @@ public class EventController {
 
 	@GetMapping
 	public List<EventDTO> getAllEventsAfter(
-		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime after) {
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime after) {
 		return eventRepository.findByTimeOfTheEventAfter(after)
 			.stream()
 			.map(this::toDTO)

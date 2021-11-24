@@ -21,10 +21,11 @@ public class User {
     private String email;
     private String fullName;
     private String password;
-    @JsonProperty("admin")
     private Boolean isAdmin = false;
+
     @ManyToMany
     private List<CreditCard> creditCards;
+
     @OneToMany
     private List<Ticket> tickets;
 }

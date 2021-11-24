@@ -27,7 +27,7 @@ public class TicketController {
 
 	@PostMapping("/{userId}")
 	public TicketDTO createTicket(@RequestBody TicketDTO ticketDTO,
-		@PathVariable long userId) {
+			@PathVariable long userId) {
 		User buyer = userRepository.findById(userId).orElseThrow();
 		Ticket ticket = ticketRepository.save(toEntity(ticketDTO));
 		buyer.getTickets().add(ticket);

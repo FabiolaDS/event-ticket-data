@@ -39,6 +39,11 @@ public class CreditCardController {
 
 	}
 
+	@DeleteMapping("/{cardId}")
+	public void removeCreditCard(@PathVariable long cardId) {
+		creditCardRepository.deleteById(cardId);
+	}
+
 	private CreditCardDTO toDTO(CreditCard entity) {
 		return new CreditCardDTO(entity.getId(), entity.getCardNumber(),
 			entity.getExpiryMonth(), entity.getExpiryYear(), entity.getCvv(),
