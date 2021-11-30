@@ -91,6 +91,6 @@ class EventControllerTest
     assertEquals(dto.getTicketPrice(), result.getTicketPrice());
     assertEquals(dto.getOrganizerId(), result.getOrganizerId());
 
-    assertFalse(result.isCancelled());
+    assertFalse(result.getIsCancelled());
   }
 }

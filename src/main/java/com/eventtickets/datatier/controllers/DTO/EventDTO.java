@@ -17,10 +17,10 @@ public class EventDTO {
 	private String description;
 	private String location;
 	private String thumbnail;
-	private int availableTickets;
-	private boolean isCancelled;
+	private Integer availableTickets;
+	private Boolean isCancelled;
 	private LocalDateTime timeOfTheEvent;
-	private double ticketPrice;
+	private Double ticketPrice;
 	private long organizerId;
 	private int bookedTickets;
 }

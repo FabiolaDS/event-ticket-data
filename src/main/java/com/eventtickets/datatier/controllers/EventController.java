@@ -1,6 +1,5 @@
 package com.eventtickets.datatier.controllers;
 
-import com.eventtickets.datatier.controllers.DTO.CreateEventDTO;
 import com.eventtickets.datatier.controllers.DTO.EventDTO;
 import com.eventtickets.datatier.model.Event;
 import com.eventtickets.datatier.model.User;
@@ -55,6 +54,55 @@ public class EventController {
     public EventDTO getEventById(@PathVariable Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
         return toDTO(event);
+    }
+
+    @PatchMapping("/{id}")
+    public EventDTO updateEvent(@PathVariable long id, @RequestBody EventDTO updated) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        if (updated.getName()!= null){
+            event.setName(updated.getName());
+        }
+        if(updated.getDescription() != null){
+            event.setDescription(updated.getDescription());
+        }
+
+
+        if(updated.getLocation() != null){
+            event.setLocation(updated.getLocation());
+        }
+        if(updated.getThumbnail() != null){
+            event.setThumbnail(updated.getThumbnail());
+        }
+        if(updated.getAvailableTickets() != null){
+            event.setAvailableTickets(updated.getAvailableTickets());
+        }
+
+        if(updated.getIsCancelled() != null){
+            event.setCancelled(updated.getIsCancelled());
+        }
+
+        if(updated.getTimeOfTheEvent() != null){
+            event.setTimeOfTheEvent(updated.getTimeOfTheEvent());
+        }
+        if(updated.getTicketPrice() != null){
+            event.setTicketPrice(updated.getTicketPrice());
+        }
+        return toDTO(eventRepository.save(event));
+
+    }
+
+    private Event toEntity(EventDTO eventDTO) {
+        return new Event(eventDTO.getId(),
+                eventDTO.getName(),
+                eventDTO.getDescription(),
+                eventDTO.getLocation(),
+                eventDTO.getThumbnail(),
+                eventDTO.getAvailableTickets(),
+                eventDTO.getIsCancelled(),
+                eventDTO.getTimeOfTheEvent(),
+                eventDTO.getTicketPrice(),
+                userRepository.getById(eventDTO.getOrganizerId()),
+                null);
     }
 
     private EventDTO toDTO(Event event) {

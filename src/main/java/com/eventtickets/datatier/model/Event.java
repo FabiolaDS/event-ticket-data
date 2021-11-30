@@ -13,24 +13,21 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Event
-{
-  @Id
-  @GeneratedValue
-  private Long id;
+public class Event {
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  private String name;
-  private String description;
-  private String location;
-  private String thumbnail;
-  private int availableTickets;
-  private boolean isCancelled;
-  private LocalDateTime timeOfTheEvent;
-  private double ticketPrice;
-  @ManyToOne
-  private User organizer;
-  @OneToMany(mappedBy = "event")
-  private List<Ticket>  bookedTickets = new ArrayList<>();
-
-
+    private String name;
+    private String description;
+    private String location;
+    private String thumbnail;
+    private int availableTickets;
+    private boolean isCancelled;
+    private LocalDateTime timeOfTheEvent;
+    private double ticketPrice;
+    @ManyToOne
+    private User organizer;
+    @OneToMany(mappedBy = "event")
+    private List<Ticket> bookedTickets = new ArrayList<>();
 }
