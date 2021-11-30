@@ -3,6 +3,7 @@ package com.eventtickets.datatier.controllers;
 import com.eventtickets.datatier.controllers.DTO.UserDTO;
 import com.eventtickets.datatier.model.User;
 import com.eventtickets.datatier.persistence.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
 	private UserRepository userRepository;
 
 	public UserController(UserRepository userRepository) {
@@ -22,8 +24,15 @@ public class UserController {
 	}
 
 	@GetMapping
-	public UserDTO findUserByEmail(@RequestParam String email) {
-		return toDTO(userRepository.findByEmail(email));
+	public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
+		User result = userRepository.findByEmail(email);
+
+		if(result == null)
+			return ResponseEntity
+					.notFound()
+					.build();
+
+		return ResponseEntity.ok(toDTO(result));
 	}
 
 	@PatchMapping("/{userId}")

@@ -17,8 +17,10 @@ public class Ticket
 {
   @Id
   private String ticketNr;
+
   @ManyToOne
   private Event event;
+
   @ManyToOne
   private CreditCard payment;
 
