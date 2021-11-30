@@ -22,5 +22,5 @@ public class EventDTO {
 	private LocalDateTime timeOfTheEvent;
 	private double ticketPrice;
 	private long organizerId;
-	private long bookedTickets;
+	private int bookedTickets;
 }
