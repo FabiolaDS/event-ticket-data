@@ -3,6 +3,7 @@ package com.eventtickets.datatier.controllers;
 import com.eventtickets.datatier.controllers.DTO.EventDTO;
 import com.eventtickets.datatier.model.Event;
 import com.eventtickets.datatier.model.User;
+import com.eventtickets.datatier.persistence.CategoryRepository;
 import com.eventtickets.datatier.persistence.EventRepository;
 import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,7 @@ public class EventController {
     private EventRepository eventRepository;
     @NonNull
     private UserRepository userRepository;
+    @NonNull private CategoryRepository categoryRepository;
 
     @GetMapping
     public List<EventDTO> getAllEventsAfter(
@@ -34,14 +37,7 @@ public class EventController {
 
     @PostMapping
     public EventDTO addEvent(@RequestBody EventDTO eventDTO) {
-        Event event = new Event();
-        event.setName(eventDTO.getName());
-        event.setDescription(eventDTO.getDescription());
-        event.setLocation(eventDTO.getLocation());
-        event.setThumbnail(eventDTO.getThumbnail());
-        event.setTimeOfTheEvent(eventDTO.getTimeOfTheEvent());
-        event.setAvailableTickets(eventDTO.getAvailableTickets());
-        event.setTicketPrice(eventDTO.getTicketPrice());
+        Event event = toEntity(eventDTO);
 
         User organizer = userRepository.findById(eventDTO.getOrganizerId())
                 .orElseThrow();
@@ -84,6 +80,11 @@ public class EventController {
             event.setTicketPrice(updated.getTicketPrice());
         }
 
+        if (updated.getCategory() != null) {
+            event.setCategory(categoryRepository.findByName(updated.getCategory()));
+        }
+
+
         return toDTO(eventRepository.save(event));
     }
 
@@ -97,8 +98,9 @@ public class EventController {
                 eventDTO.getIsCancelled(),
                 eventDTO.getTimeOfTheEvent(),
                 eventDTO.getTicketPrice(),
+                categoryRepository.findByName(eventDTO.getCategory()),
                 userRepository.getById(eventDTO.getOrganizerId()),
-                null);
+                new ArrayList<>());
     }
 
     private EventDTO toDTO(Event event) {
@@ -111,6 +113,7 @@ public class EventController {
                 event.isCancelled(),
                 event.getTimeOfTheEvent(),
                 event.getTicketPrice(),
+                event.getCategory().getName(),
                 event.getOrganizer().getId(),
                 event.getBookedTickets().size());
     }

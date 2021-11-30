@@ -27,7 +27,11 @@ public class Event {
     private LocalDateTime timeOfTheEvent;
     private double ticketPrice;
     @ManyToOne
+    private Category category;
+
+    @ManyToOne
     private User organizer;
     @OneToMany(mappedBy = "event")
     private List<Ticket> bookedTickets = new ArrayList<>();
+
 }

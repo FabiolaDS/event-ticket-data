@@ -21,6 +21,7 @@ public class EventDTO {
 	private Boolean isCancelled;
 	private LocalDateTime timeOfTheEvent;
 	private Double ticketPrice;
+	private String category;
 	private long organizerId;
 	private int bookedTickets;
 }
