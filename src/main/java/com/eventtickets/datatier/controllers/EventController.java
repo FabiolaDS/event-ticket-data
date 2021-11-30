@@ -59,36 +59,32 @@ public class EventController {
     @PatchMapping("/{id}")
     public EventDTO updateEvent(@PathVariable long id, @RequestBody EventDTO updated) {
         Event event = eventRepository.findById(id).orElseThrow();
-        if (updated.getName()!= null){
+        if (updated.getName() != null) {
             event.setName(updated.getName());
         }
-        if(updated.getDescription() != null){
+        if (updated.getDescription() != null) {
             event.setDescription(updated.getDescription());
         }
-
-
-        if(updated.getLocation() != null){
+        if (updated.getLocation() != null) {
             event.setLocation(updated.getLocation());
         }
-        if(updated.getThumbnail() != null){
+        if (updated.getThumbnail() != null) {
             event.setThumbnail(updated.getThumbnail());
         }
-        if(updated.getAvailableTickets() != null){
+        if (updated.getAvailableTickets() != null) {
             event.setAvailableTickets(updated.getAvailableTickets());
         }
-
-        if(updated.getIsCancelled() != null){
+        if (updated.getIsCancelled() != null) {
             event.setCancelled(updated.getIsCancelled());
         }
-
-        if(updated.getTimeOfTheEvent() != null){
+        if (updated.getTimeOfTheEvent() != null) {
             event.setTimeOfTheEvent(updated.getTimeOfTheEvent());
         }
-        if(updated.getTicketPrice() != null){
+        if (updated.getTicketPrice() != null) {
             event.setTicketPrice(updated.getTicketPrice());
         }
-        return toDTO(eventRepository.save(event));
 
+        return toDTO(eventRepository.save(event));
     }
 
     private Event toEntity(EventDTO eventDTO) {
