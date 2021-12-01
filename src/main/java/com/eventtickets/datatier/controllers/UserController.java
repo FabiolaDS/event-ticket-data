@@ -12,65 +12,66 @@ import java.util.ArrayList;
 @RequestMapping("/users")
 public class UserController {
 
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 
-	public UserController(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	@PostMapping
-	public UserDTO createUser(@RequestBody UserDTO user) {
-		return toDTO(userRepository.save(toEntity(user)));
-	}
+    @PostMapping
+    public UserDTO createUser(@RequestBody UserDTO user) {
+        return toDTO(userRepository.save(toEntity(user)));
+    }
 
-	@GetMapping
-	public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
-		User result = userRepository.findByEmail(email);
+    @GetMapping
+    public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
+        User result = userRepository.findByEmail(email);
 
-		if(result == null)
-			return ResponseEntity
-					.notFound()
-					.build();
+        if (result == null)
+            return ResponseEntity
+                    .notFound()
+                    .build();
 
-		return ResponseEntity.ok(toDTO(result));
-	}
+        return ResponseEntity.ok(toDTO(result));
+    }
 
-	@PatchMapping("/{userId}")
-	public UserDTO updateUser(@PathVariable long userId, @RequestBody UserDTO updateData) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("No such user"));
+    @PatchMapping("/{userId}")
+    public UserDTO updateUser(@PathVariable long userId, @RequestBody UserDTO updateData) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("No such user"));
 
-		if (updateData.getEmail() != null) {
-			user.setEmail(updateData.getEmail());
-		}
-		if (updateData.getFullName() != null) {
-			user.setFullName(updateData.getFullName());
-		}
-		if (updateData.getPassword() != null) {
-			user.setPassword(updateData.getPassword());
-		}
-		if (updateData.getIsAdmin() != null) {
-			user.setIsAdmin(updateData.getIsAdmin());
-		}
+        if (updateData.getEmail() != null) {
+            user.setEmail(updateData.getEmail());
+        }
+        if (updateData.getFullName() != null) {
+            user.setFullName(updateData.getFullName());
+        }
+        if (updateData.getPassword() != null) {
+            user.setPassword(updateData.getPassword());
+        }
+        if (updateData.getIsAdmin() != null) {
+            user.setIsAdmin(updateData.getIsAdmin());
+        }
 
-		return toDTO(userRepository.save(user));
-	}
+        return toDTO(userRepository.save(user));
+    }
 
-	private User toEntity(UserDTO dto) {
-		return new User(dto.getId(),
-			dto.getEmail(),
-			dto.getFullName(),
-			dto.getPassword(),
-			dto.getIsAdmin(),
-			new ArrayList<>(),
-			new ArrayList<>());
-	}
+    private User toEntity(UserDTO dto) {
+        return new User(dto.getId(),
+                dto.getEmail(),
+                dto.getFullName(),
+                dto.getPassword(),
+                dto.getIsAdmin(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>());
+    }
 
-	private UserDTO toDTO(User entity) {
-		return new UserDTO(entity.getId(),
-			entity.getEmail(),
-			entity.getFullName(),
-			entity.getPassword(),
-			entity.getIsAdmin());
-	}
+    private UserDTO toDTO(User entity) {
+        return new UserDTO(entity.getId(),
+                entity.getEmail(),
+                entity.getFullName(),
+                entity.getPassword(),
+                entity.getIsAdmin());
+    }
 }

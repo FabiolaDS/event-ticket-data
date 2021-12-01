@@ -29,4 +29,6 @@ public class User {
 
     @OneToMany
     private List<Ticket> tickets;
+    @ManyToMany
+    private List<Notification> notifications;
 }

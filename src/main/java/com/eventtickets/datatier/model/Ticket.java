@@ -24,4 +24,6 @@ public class Ticket
   @ManyToOne
   private CreditCard payment;
 
+  @ManyToOne
+  private User buyer;
 }

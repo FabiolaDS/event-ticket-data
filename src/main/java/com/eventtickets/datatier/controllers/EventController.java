@@ -1,7 +1,9 @@
 package com.eventtickets.datatier.controllers;
 
 import com.eventtickets.datatier.controllers.DTO.EventDTO;
+import com.eventtickets.datatier.controllers.DTO.UserDTO;
 import com.eventtickets.datatier.model.Event;
+import com.eventtickets.datatier.model.Ticket;
 import com.eventtickets.datatier.model.User;
 import com.eventtickets.datatier.persistence.CategoryRepository;
 import com.eventtickets.datatier.persistence.EventRepository;
@@ -100,6 +102,21 @@ public class EventController {
                 .collect(Collectors.toList());
 
     }
+    @GetMapping("/{eventId}/participants")
+    public List<UserDTO> getParticipants( @PathVariable long eventId) {
+        Event e = eventRepository.findById(eventId).orElseThrow();
+
+        return e.getBookedTickets().stream()
+                .map(Ticket::getBuyer)
+                .distinct()
+                .map(entity -> new UserDTO(entity.getId(),
+                        entity.getEmail(),
+                        entity.getFullName(),
+                        entity.getPassword(),
+                        entity.getIsAdmin()))
+                .collect(Collectors.toList());
+    }
+
 
     private Event toEntity(EventDTO eventDTO) {
         return new Event(eventDTO.getId(),
