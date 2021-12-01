@@ -11,6 +11,7 @@ import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -102,8 +103,9 @@ public class EventController {
                 .collect(Collectors.toList());
 
     }
+
     @GetMapping("/{eventId}/participants")
-    public List<UserDTO> getParticipants( @PathVariable long eventId) {
+    public List<UserDTO> getParticipants(@PathVariable long eventId) {
         Event e = eventRepository.findById(eventId).orElseThrow();
 
         return e.getBookedTickets().stream()
@@ -115,6 +117,12 @@ public class EventController {
                         entity.getPassword(),
                         entity.getIsAdmin()))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/byName")
+    public ResponseEntity<EventDTO> getEventByName(@RequestParam String name) {
+        return ResponseEntity.of(eventRepository.findByName(name)// optional
+                .map(this::toDTO));
     }
 
 
