@@ -24,7 +24,8 @@ public class EventController {
     private EventRepository eventRepository;
     @NonNull
     private UserRepository userRepository;
-    @NonNull private CategoryRepository categoryRepository;
+    @NonNull
+    private CategoryRepository categoryRepository;
 
     @GetMapping
     public List<EventDTO> getAllEventsAfter(
@@ -86,6 +87,18 @@ public class EventController {
 
 
         return toDTO(eventRepository.save(event));
+    }
+
+    @GetMapping("/byCategoryAndTime")
+    public List<EventDTO> getByCategoryAndTimeOfTheEventAfter(
+            @RequestParam long categoryId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam LocalDateTime dateTime) {
+
+        return eventRepository.findByCategoryIdAndTimeOfTheEventAfter(categoryId, dateTime)
+                .stream()
+                .map(this::toDTO)//do the conversion
+                .collect(Collectors.toList());
+
     }
 
     private Event toEntity(EventDTO eventDTO) {

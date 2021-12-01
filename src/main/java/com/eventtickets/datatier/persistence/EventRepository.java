@@ -9,5 +9,6 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long>
 {
   List<Event> findByTimeOfTheEventAfter(LocalDateTime localDateTime);
-  List <Event> findByCategoryId(long categoryId);
+  List <Event> findByCategoryIdAndTimeOfTheEventAfter(long categoryId, LocalDateTime timeOfTheEvent);
+
 }
