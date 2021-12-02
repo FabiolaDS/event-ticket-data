@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +34,7 @@ class EventControllerTest {
     private MockMvc mvc;   // mock REST requests
     @Autowired
     private ObjectMapper mapper;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -82,16 +84,16 @@ class EventControllerTest {
         Category cat = randCategory();
         catRepo.save(cat);
 
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
         EventDTO dto = randEventDTO(cat.getName(), organizer.getId());
-        dto.setTimeOfTheEvent(time);
+        dto.setTimeOfTheEvent(time.plusDays(1));
 
         EventDTO created = mapper.readValue(mvc.perform(
                         post("/events")
                                 .contentType("application/json")
                                 .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString(), EventDTO.class);
 
         // Get list of all events
@@ -103,28 +105,27 @@ class EventControllerTest {
         String json = response.getResponse().getContentAsString();
         List<EventDTO> result = mapper.readValue(json, new TypeReference<List<EventDTO>>() {});
 
-        System.out.println("##################################");
-        System.out.println(result);
-
         // Confirm returned list contains newly created event
         assertTrue(result.contains(created));
     }
 
     @Test
     void testAddEvent() throws Exception {
+        // SET UP
         User organizer = randUser();
         userRepository.save(organizer);
 
         Category cat = randCategory();
         catRepo.save(cat);
 
+        // ACTUAL TEST
         EventDTO dto = randEventDTO(cat.getName(), organizer.getId());
 
         MvcResult response = mvc.perform(
                         post("/events")
                                 .contentType("application/json")
                                 .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String json = response.getResponse().getContentAsString();

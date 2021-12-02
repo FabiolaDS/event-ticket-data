@@ -53,7 +53,6 @@ public class TicketController {
                         .stream()
                         .map(this::toDTO)
                         .collect(Collectors.toList())));
-
     }
 
 
@@ -64,8 +63,6 @@ public class TicketController {
                 ticket.getPayment().getId(),
                 ticket.getBuyer().getId(),
                 ticket.getTimeOfPurchase());
-
-
     }
 
     private Ticket toEntity(TicketDTO ticketDTO) {
