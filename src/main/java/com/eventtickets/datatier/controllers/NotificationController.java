@@ -6,6 +6,8 @@ import com.eventtickets.datatier.persistence.NotificationRepository;
 import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -22,28 +24,34 @@ public class NotificationController {
     private UserRepository userRepository;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Notification createNotification(@RequestBody Notification notification) {
 
         return notificationRepository.save(notification);
     }
 
     @GetMapping("/byUser/{id}")
-    public List<Notification> getNotificationByUser(@PathVariable long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        List<Notification> notifications = user.getNotifications();
-        Collections.sort(notifications);
-        return notifications;
+    public ResponseEntity<List<Notification>> getNotificationByUser(@PathVariable long id) {
+        return ResponseEntity.of(userRepository.findById(id)
+                .map(User::getNotifications)
+                .map(ls -> {
+                    Collections.sort(ls);
+                    return ls;
+                }));
     }
 
     @PostMapping("/byUser/{userId}")
-    public Notification addNotification(@RequestParam long notificationId, @PathVariable long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Notification notification = notificationRepository.findById(notificationId).orElseThrow();
 
-        user.getNotifications().add(notification);
-        userRepository.save(user);
-        return notification;
+    public ResponseEntity<Notification> addNotification(@RequestParam long notificationId, @PathVariable long userId) {
+        return ResponseEntity.of(
+                userRepository.findById(userId).map(user ->
+                        notificationRepository.findById(notificationId).map(notification -> {
+
+                            user.getNotifications().add(notification);
+                            userRepository.save(user);
+                            return notification;
+
+                        }).orElse(null)
+                ));
     }
-
-
 }

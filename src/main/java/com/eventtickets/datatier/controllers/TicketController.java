@@ -12,6 +12,7 @@ import com.eventtickets.datatier.persistence.TicketRepository;
 import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,25 +32,28 @@ public class TicketController {
     private CreditCardRepository creditCardRepository;
 
     @PostMapping("/{userId}")
-    public TicketDTO createTicket(@RequestBody TicketDTO ticketDTO,
-                                  @PathVariable long userId) {
-        User buyer = userRepository.findById(userId).orElseThrow();
-        Ticket ticket = ticketRepository.save(toEntity(ticketDTO));
-        buyer.getTickets().add(ticket);
-        userRepository.save(buyer);
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO,
+                                                  @PathVariable long userId) {
 
-        return toDTO(ticket);
+        return ResponseEntity.of(userRepository.findById(userId)
+                .map(buyer -> {
+
+                    Ticket ticket = ticketRepository.save(toEntity(ticketDTO));
+                    buyer.getTickets().add(ticket);
+                    userRepository.save(buyer);
+
+                    return ticket;
+                }).map(this::toDTO));
     }
 
     @GetMapping("/byUser/{userId}")
-    public List<TicketDTO> getTicketsByUser(@PathVariable long userId) {
-        System.out.println(userRepository);
-        System.out.println("USERID " + userId);
-        return userRepository.findById(userId)
-                .orElseThrow()
-                .getTickets().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<TicketDTO>> getTicketsByUser(@PathVariable long userId) {
+        return ResponseEntity.of(userRepository.findById(userId)
+                .map(user -> user.getTickets()
+                        .stream()
+                        .map(this::toDTO)
+                        .collect(Collectors.toList())));
+
     }
 
 
@@ -62,7 +66,6 @@ public class TicketController {
                 ticket.getTimeOfPurchase());
 
 
-
     }
 
     private Ticket toEntity(TicketDTO ticketDTO) {
@@ -73,7 +76,7 @@ public class TicketController {
         User buyer = userRepository.findById(ticketDTO.getBuyerId())
                 .orElseThrow();
 
-        return new Ticket(ticketDTO.getTicketNr(), event, creditCard, buyer,ticketDTO.getTimeOfPurchase());
+        return new Ticket(ticketDTO.getTicketNr(), event, creditCard, buyer, ticketDTO.getTimeOfPurchase());
     }
 
 }

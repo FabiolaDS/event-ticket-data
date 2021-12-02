@@ -3,6 +3,7 @@ package com.eventtickets.datatier.controllers;
 import com.eventtickets.datatier.controllers.DTO.UserDTO;
 import com.eventtickets.datatier.model.User;
 import com.eventtickets.datatier.persistence.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,50 +24,45 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable long id) {
-        Optional<User> u = userRepository.findById(id);
+        return ResponseEntity.of(userRepository.findById(id)
+                .map(this::toDTO));
 
-        if (u.isPresent())
-            return ResponseEntity.ok(toDTO(u.get()));
-
-        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDTO createUser(@RequestBody UserDTO user) {
         return toDTO(userRepository.save(toEntity(user)));
     }
 
     @GetMapping("/byEmail")
     public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
-        User result = userRepository.findByEmail(email);
+        return ResponseEntity.of(userRepository.findByEmail(email)
+                .map(this::toDTO));
 
-        if (result == null)
-            return ResponseEntity
-                    .notFound()
-                    .build();
-
-        return ResponseEntity.ok(toDTO(result));
     }
 
     @PatchMapping("/{userId}")
-    public UserDTO updateUser(@PathVariable long userId, @RequestBody UserDTO updateData) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("No such user"));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable long userId, @RequestBody UserDTO updateData) {
+        return ResponseEntity.of(userRepository.findById(userId)
+                .map(user -> {
 
-        if (updateData.getEmail() != null) {
-            user.setEmail(updateData.getEmail());
-        }
-        if (updateData.getFullName() != null) {
-            user.setFullName(updateData.getFullName());
-        }
-        if (updateData.getPassword() != null) {
-            user.setPassword(updateData.getPassword());
-        }
-        if (updateData.getIsAdmin() != null) {
-            user.setIsAdmin(updateData.getIsAdmin());
-        }
 
-        return toDTO(userRepository.save(user));
+                    if (updateData.getEmail() != null) {
+                        user.setEmail(updateData.getEmail());
+                    }
+                    if (updateData.getFullName() != null) {
+                        user.setFullName(updateData.getFullName());
+                    }
+                    if (updateData.getPassword() != null) {
+                        user.setPassword(updateData.getPassword());
+                    }
+                    if (updateData.getIsAdmin() != null) {
+                        user.setIsAdmin(updateData.getIsAdmin());
+                    }
+                    return user;
+                }).map(userRepository::save)
+                .map(this::toDTO));
     }
 
     @GetMapping

@@ -11,12 +11,14 @@ import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,6 +42,7 @@ public class EventController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public EventDTO addEvent(@RequestBody EventDTO eventDTO) {
         Event event = toEntity(eventDTO);
 
@@ -51,43 +54,60 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventDTO getEventById(@PathVariable Long id) {
-        Event event = eventRepository.findById(id).orElseThrow();
-        return toDTO(event);
+    public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
+
+//        Optional<Event> event = eventRepository.findById(id);
+//
+//        if(event.isPresent()) {
+//            return ResponseEntity.ok(toDTO(event.get()));
+//        }
+//
+//        return ResponseEntity
+//                .notFound()
+//                .build();
+//      Same as above but shorter
+        return ResponseEntity.of(
+                eventRepository.findById(id)
+                        .map(this::toDTO));
     }
 
     @PatchMapping("/{id}")
-    public EventDTO updateEvent(@PathVariable long id, @RequestBody EventDTO updated) {
-        Event event = eventRepository.findById(id).orElseThrow();
-        if (updated.getName() != null) {
-            event.setName(updated.getName());
-        }
-        if (updated.getDescription() != null) {
-            event.setDescription(updated.getDescription());
-        }
-        if (updated.getLocation() != null) {
-            event.setLocation(updated.getLocation());
-        }
-        if (updated.getThumbnail() != null) {
-            event.setThumbnail(updated.getThumbnail());
-        }
-        if (updated.getAvailableTickets() != null) {
-            event.setAvailableTickets(updated.getAvailableTickets());
-        }
-        if (updated.getIsCancelled() != null) {
-            event.setCancelled(updated.getIsCancelled());
-        }
-        if (updated.getTimeOfTheEvent() != null) {
-            event.setTimeOfTheEvent(updated.getTimeOfTheEvent());
-        }
-        if (updated.getTicketPrice() != null) {
-            event.setTicketPrice(updated.getTicketPrice());
-        }
-        if (updated.getCategory() != null) {
-            event.setCategory(categoryRepository.findByName(updated.getCategory()).orElseThrow());
-        }
+    public ResponseEntity<EventDTO> updateEvent(@PathVariable long id, @RequestBody EventDTO updated) {
+        return ResponseEntity.of(eventRepository.findById(id)
+                .map(event -> {
 
-        return toDTO(eventRepository.save(event));
+
+                    if (updated.getName() != null) {
+                        event.setName(updated.getName());
+                    }
+                    if (updated.getDescription() != null) {
+                        event.setDescription(updated.getDescription());
+                    }
+                    if (updated.getLocation() != null) {
+                        event.setLocation(updated.getLocation());
+                    }
+                    if (updated.getThumbnail() != null) {
+                        event.setThumbnail(updated.getThumbnail());
+                    }
+                    if (updated.getAvailableTickets() != null) {
+                        event.setAvailableTickets(updated.getAvailableTickets());
+                    }
+                    if (updated.getIsCancelled() != null) {
+                        event.setCancelled(updated.getIsCancelled());
+                    }
+                    if (updated.getTimeOfTheEvent() != null) {
+                        event.setTimeOfTheEvent(updated.getTimeOfTheEvent());
+                    }
+                    if (updated.getTicketPrice() != null) {
+                        event.setTicketPrice(updated.getTicketPrice());
+                    }
+                    if (updated.getCategory() != null) {
+                        event.setCategory(categoryRepository.findByName(updated.getCategory()).orElseThrow());
+                    }
+                    return event;
+                }).map(eventRepository::save)
+                .map(this::toDTO));
+
     }
 
     @GetMapping("/byCategoryAndTime")
@@ -102,18 +122,19 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}/participants")
-    public List<UserDTO> getParticipants(@PathVariable long eventId) {
-        Event e = eventRepository.findById(eventId).orElseThrow();
+    public ResponseEntity<List<UserDTO>> getParticipants(@PathVariable long eventId) {
+        return ResponseEntity.of(eventRepository.findById(eventId)
+                .map(e -> e.getBookedTickets().stream()
+                        .map(Ticket::getBuyer)
+                        .distinct()
+                        .map(entity -> new UserDTO(entity.getId(),
+                                entity.getEmail(),
+                                entity.getFullName(),
+                                entity.getPassword(),
+                                entity.getIsAdmin()))
+                        .collect(Collectors.toList())));
 
-        return e.getBookedTickets().stream()
-                .map(Ticket::getBuyer)
-                .distinct()
-                .map(entity -> new UserDTO(entity.getId(),
-                        entity.getEmail(),
-                        entity.getFullName(),
-                        entity.getPassword(),
-                        entity.getIsAdmin()))
-                .collect(Collectors.toList());
+
     }
 
     @GetMapping("/byName")

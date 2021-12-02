@@ -4,6 +4,7 @@ import com.eventtickets.datatier.model.Category;
 import com.eventtickets.datatier.persistence.CategoryRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class CategoryController {
     private CategoryRepository categoryRepository;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@RequestBody Category category) {
         return categoryRepository.save(category);
     }
