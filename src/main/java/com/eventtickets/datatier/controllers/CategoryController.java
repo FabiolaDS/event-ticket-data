@@ -4,6 +4,7 @@ import com.eventtickets.datatier.model.Category;
 import com.eventtickets.datatier.persistence.CategoryRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,5 +25,11 @@ public class CategoryController {
     @GetMapping
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    @GetMapping("/byName")
+    public ResponseEntity<Category> findByName(@RequestParam String name)
+    {
+        return  ResponseEntity.of(categoryRepository.findByName(name));
     }
 }

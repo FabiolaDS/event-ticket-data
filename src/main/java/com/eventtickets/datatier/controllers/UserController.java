@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -18,12 +21,22 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> findById(@PathVariable long id) {
+        Optional<User> u = userRepository.findById(id);
+
+        if (u.isPresent())
+            return ResponseEntity.ok(toDTO(u.get()));
+
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     public UserDTO createUser(@RequestBody UserDTO user) {
         return toDTO(userRepository.save(toEntity(user)));
     }
 
-    @GetMapping
+    @GetMapping("/byEmail")
     public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
         User result = userRepository.findByEmail(email);
 
@@ -54,6 +67,15 @@ public class UserController {
         }
 
         return toDTO(userRepository.save(user));
+    }
+
+    @GetMapping
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
+
     }
 
     private User toEntity(UserDTO dto) {

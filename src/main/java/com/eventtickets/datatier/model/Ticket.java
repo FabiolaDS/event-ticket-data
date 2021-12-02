@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Ticket
 {
   @Id
@@ -26,4 +26,7 @@ public class Ticket
 
   @ManyToOne
   private User buyer;
+
+  private LocalDateTime timeOfPurchase;
 }
+

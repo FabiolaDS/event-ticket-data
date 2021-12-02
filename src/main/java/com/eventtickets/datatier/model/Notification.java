@@ -1,6 +1,5 @@
 package com.eventtickets.datatier.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +16,7 @@ public class Notification implements Comparable<Notification>
     @Id
     @GeneratedValue
     private Long id;
+
     private String title;
     private  String message;
     private LocalDateTime timestamp;

@@ -1,6 +1,5 @@
 package com.eventtickets.datatier.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Table(name = "account",
-    uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+
 @Entity
+@Table(name = "account",
+        uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

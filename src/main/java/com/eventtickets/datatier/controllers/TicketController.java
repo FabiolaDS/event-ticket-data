@@ -58,7 +58,10 @@ public class TicketController {
                 ticket.getTicketNr(),
                 ticket.getEvent().getId(),
                 ticket.getPayment().getId(),
-                ticket.getBuyer().getId());
+                ticket.getBuyer().getId(),
+                ticket.getTimeOfPurchase());
+
+
 
     }
 
@@ -70,7 +73,7 @@ public class TicketController {
         User buyer = userRepository.findById(ticketDTO.getBuyerId())
                 .orElseThrow();
 
-        return new Ticket(ticketDTO.getTicketNr(), event, creditCard, buyer);
+        return new Ticket(ticketDTO.getTicketNr(), event, creditCard, buyer,ticketDTO.getTimeOfPurchase());
     }
 
 }

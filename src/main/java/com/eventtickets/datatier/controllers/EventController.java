@@ -83,11 +83,9 @@ public class EventController {
         if (updated.getTicketPrice() != null) {
             event.setTicketPrice(updated.getTicketPrice());
         }
-
         if (updated.getCategory() != null) {
-            event.setCategory(categoryRepository.findByName(updated.getCategory()));
+            event.setCategory(categoryRepository.findByName(updated.getCategory()).orElseThrow());
         }
-
 
         return toDTO(eventRepository.save(event));
     }
@@ -99,9 +97,8 @@ public class EventController {
 
         return eventRepository.findByCategoryIdAndTimeOfTheEventAfter(categoryId, dateTime)
                 .stream()
-                .map(this::toDTO)//do the conversion
+                .map(this::toDTO) //do the conversion
                 .collect(Collectors.toList());
-
     }
 
     @GetMapping("/{eventId}/participants")
@@ -136,7 +133,7 @@ public class EventController {
                 eventDTO.getIsCancelled(),
                 eventDTO.getTimeOfTheEvent(),
                 eventDTO.getTicketPrice(),
-                categoryRepository.findByName(eventDTO.getCategory()),
+                categoryRepository.findByName(eventDTO.getCategory()).orElseThrow(),
                 userRepository.getById(eventDTO.getOrganizerId()),
                 new ArrayList<>());
     }
