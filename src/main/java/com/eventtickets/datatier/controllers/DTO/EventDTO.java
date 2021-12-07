@@ -16,6 +16,7 @@ public class EventDTO {
 	private String name;
 	private String description;
 	private String location;
+	private String address;
 	private String thumbnail;
 	private Integer availableTickets;
 	private Boolean isCancelled;

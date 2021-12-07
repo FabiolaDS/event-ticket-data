@@ -22,6 +22,7 @@ public class Event {
     private String name;
     private String description;
     private String location;
+    private String address;
     private String thumbnail;
     private int availableTickets;
     private boolean isCancelled;
