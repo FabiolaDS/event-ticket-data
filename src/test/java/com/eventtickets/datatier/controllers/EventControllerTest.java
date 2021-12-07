@@ -62,6 +62,7 @@ class EventControllerTest {
                 randStr(),
                 randStr(),
                 randStr(),
+                randStr(),
                 (int) (Math.random() * 100),
                 false,
                 LocalDateTime.now(),
