@@ -83,6 +83,7 @@ class EventControllerTest {
         userRepository.save(organizer);
 
         Category cat = randCategory();
+
         catRepo.save(cat);
 
         LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

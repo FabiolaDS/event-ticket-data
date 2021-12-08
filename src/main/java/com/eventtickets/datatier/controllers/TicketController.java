@@ -12,10 +12,12 @@ import com.eventtickets.datatier.persistence.TicketRepository;
 import com.eventtickets.datatier.persistence.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,11 +33,17 @@ public class TicketController {
     @NonNull
     private CreditCardRepository creditCardRepository;
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO,
-                                                  @PathVariable long userId) {
+    @PostMapping
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO
+    ) {
+        if (!eventRepository.existsById(ticketDTO.getEventId())
+                || !creditCardRepository.existsById(ticketDTO.getPaymentId())) {
+            return ResponseEntity.notFound().build();
 
-        return ResponseEntity.of(userRepository.findById(userId)
+        }
+
+
+        Optional<TicketDTO> dto = userRepository.findById(ticketDTO.getBuyerId())
                 .map(buyer -> {
 
                     Ticket ticket = ticketRepository.save(toEntity(ticketDTO));
@@ -43,7 +51,13 @@ public class TicketController {
                     userRepository.save(buyer);
 
                     return ticket;
-                }).map(this::toDTO));
+                }).map(this::toDTO);
+        if (dto.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto.get());
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/byUser/{userId}")

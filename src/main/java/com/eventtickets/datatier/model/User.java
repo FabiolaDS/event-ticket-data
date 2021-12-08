@@ -27,7 +27,7 @@ public class User {
     @ManyToMany
     private List<CreditCard> creditCards;
 
-    @OneToMany
+    @OneToMany(mappedBy = "buyer")
     private List<Ticket> tickets;
     @ManyToMany
     private List<Notification> notifications;
